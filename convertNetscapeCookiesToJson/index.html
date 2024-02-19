@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Netscape Cookies to JSON Converter</title>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/1.3.8/FileSaver.js"></script>
+</head>
+
+<body>
+    <h1>Netscape Cookies to JSON Converter</h1>
+    <p>Paste your Netscape cookies below:</p>
+    <textarea id="cookiesInput" rows="10" cols="50"></textarea>
+    <br>
+    <button onclick="convertCookies()">Convert</button>
+    <br>
+    <h2>JSON Output:</h2>
+    <div id="jsonOutput"></div>
+    <br>
+    <button id="downloadAllJSONButton" onclick="downloadAllJSON()" style="display: none;">Download All JSON</button>
+
+    <script>
+        function parseNetscapeCookies(cookiesText) {
+            const cookies = [];
+            const lines = cookiesText.split('\n');
+            let currentCookie = null;
+
+            lines.forEach((line) => {
+                if (line.trim() === "") {
+                    // If the line is empty, it's the end of the current cookie.
+                    if (currentCookie) {
+                        cookies.push(currentCookie);
+                        currentCookie = null;
+                    }
+                } else {
+                    const cookieParts = line.split('\t');
+
+                    if (cookieParts.length >= 7) {
+                        const domain = cookieParts[0];
+                        const flag = cookieParts[1] === "TRUE";
+                        const path = cookieParts[2];
+                        const secure = cookieParts[3] === "TRUE";
+                        const expiration = cookieParts[4] !== "0" ? new Date(Number(cookieParts[4]) * 1000) : null;
+                        const name = cookieParts[5];
+                        const value = cookieParts[6];
+
+                        const cookie = {
+                            domain, flag, path, secure, expiration, name, value,
+                        };
+
+                        if (!currentCookie) {
+                            currentCookie = [cookie];
+                        } else {
+                            currentCookie.push(cookie);
+                        }
+                    }
+                }
+            });
+
+            if (currentCookie) {
+                cookies.push(currentCookie);
+            }
+
+            return cookies;
+        }
+
+        function convertCookies() {
+            const cookiesText = document.getElementById("cookiesInput").value;
+            const cookiesArray = parseNetscapeCookies(cookiesText);
+            const jsonOutput = document.getElementById("jsonOutput");
+
+            jsonOutput.innerHTML = "";
+
+            cookiesArray.forEach((cookie, index) => {
+                const jsonStr = JSON.stringify(cookie);
+                const downloadButton = document.createElement("a");
+                downloadButton.href = "data:text/json;charset=utf-8," + encodeURIComponent(jsonStr);
+                downloadButton.download = `cookie_${index}.json`;
+                downloadButton.textContent = `Download JSON ${index}`;
+                jsonOutput.appendChild(downloadButton);
+                jsonOutput.appendChild(document.createElement("br"));
+            });
+
+            // Hiển thị nút "Download All JSON" khi có dữ liệu JSON được tạo ra.
+            document.getElementById("downloadAllJSONButton").style.display = "block";
+        }
+
+        // function downloadAllJSON() {
+        //     const cookiesText = document.getElementById("cookiesInput").value;
+        //     const cookiesArray = parseNetscapeCookies(cookiesText);
+        //     const combinedJSON = JSON.stringify(cookiesArray, null, 2);
+
+        //     const blob = new Blob([combinedJSON], { type: 'application/json' });
+        //     const url = URL.createObjectURL(blob);
+        //     const a = document.createElement('a');
+        //     a.href = url;
+        //     a.download = 'all_cookies.json';
+        //     a.click();
+        //     URL.revokeObjectURL(url);
+        // }
+
+        function downloadAllJSON() {
+            const cookiesText = document.getElementById("cookiesInput").value;
+            const cookiesArray = parseNetscapeCookies(cookiesText);
+
+            const folderPath = "C:\\Users\\thain\\Desktop\\file";
+
+            // Create a new ZIP archive
+            const zip = new JSZip();
+
+            cookiesArray.forEach((cookie, index) => {
+                const jsonStr = JSON.stringify(cookie);
+                const blob = new Blob([jsonStr], { type: 'application/json' });
+                const fileName = `cookie_${index}.txt`;
+                zip.file(fileName, blob);
+            });
+
+            // Generate a download URL for the ZIP archive
+            // const url = URL.createObjectURL(zip.generateAsync({ type: "blob" }));
+
+            // // Create a download button
+            // const link = document.createElement('a');
+            // link.href = url;
+            // link.download = 'all_cookies.zip';
+            // link.click();
+            // URL.revokeObjectURL(url);
+
+            zip.generateAsync({ type: "blob" })
+                .then(function (content) {
+                    // see FileSaver.js
+                    saveAs(content, "2.zip");
+                });
+        }
+    </script>
+</body>
+
+</html>
