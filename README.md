@@ -25,9 +25,9 @@ npm i selenium-webdriver
 
 ## Running the project
 ## The config file run with JSON Cookies. If your file is NETSCAPE Cookies you must convert it to JSON.
+Two option
 1. Use my project
 Run file `index.html` to convert NETSCAPE Cookies to JSON Cookies. This file can convert many file NETSCAPE to JSON.
-OR
 2. Use convert online [Here](https://leaksradar.com/converter)
 
 ## Merge file (If you need to convert many many file NETSCAPE Cookies to JSON Cookies).
