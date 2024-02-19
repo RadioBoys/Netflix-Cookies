@@ -37,7 +37,7 @@ Finally, click Convert and scroll down you can see button "Download all JSON" an
 node merge.js
 ```
 ## Run config
-Open file or terminal to ./config and run `node [NAME FILE YOU WANT TO RUN]` and enjoy.
+Open folder or terminal to ./config and run `node [NAME FILE YOU WANT TO RUN]` and enjoy.
 
 ```bash
 node [NAME FILE YOU WANT TO RUN]
