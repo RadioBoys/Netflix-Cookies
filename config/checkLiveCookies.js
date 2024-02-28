@@ -1,7 +1,13 @@
-const puppeteer = require('puppeteer');
-const fs = require('fs');
+const fs = require('fs'); // Import the 'fs' module for file operations
+const axios = require('axios');
+const { CookieJar } = require('tough-cookie');
 const path = require('path');
 const readline = require('readline');
+
+
+const targetUrl = 'https://www.netflix.com';
+// Create a new CookieJar instance
+const cookieJar = new CookieJar();
 
 const rl = readline.createInterface({
     input: process.stdin,
@@ -25,32 +31,33 @@ rl.question('Enter folder path: ', async (inputFolder) => {
     }
 });
 
-async function checkCookies(cookieText) {
-    const trimmedCookieText = cookieText.trim();
-
+// Function to import cookies from a file and make a request to the site
+async function importCookiesFromFileAndMakeRequest(url, cookieText) {
     try {
-        const cookieData = JSON.parse(trimmedCookieText);
+        // Parse the cookie string into an array of objects
+        const parsedCookies = JSON.parse(cookieText);
 
-        const browser = await puppeteer.launch({ headless: 'new' }); // Specify headless mode
-        const page = await browser.newPage();
+        // Set the cookies in the cookie jar
+        parsedCookies.forEach(cookie => {
+            cookieJar.setCookieSync(`${cookie.name}=${cookie.value}`, url);
+        });
 
-        await page.goto('https://www.netflix.com/');
-        const cookies = await page.cookies();
-        await page.deleteCookie(...cookies);
+        // Make a GET request to the URL with the cookies
+        const response = await axios.get(url, {
+            // Manually set the 'Cookie' header using the cookie jar
+            headers: {
+                Cookie: cookieJar.getCookieStringSync(url)
+            }
+        })
 
-        for (const cookie of cookieData) {
-            await page.setCookie(cookie);
+        // Check if "membershipStatus" is "CURRENT_MEMBER" in the response data
+        if (response.data.includes('"membershipStatus":"CURRENT_MEMBER"')) {
+            return 0;
+        } else {
+            return 1;
         }
-        await page.reload();
-
-        const currentUrl = page.url();
-        const checkLive = currentUrl === 'https://www.netflix.com/browse';
-
-        await browser.close();
-
-        return checkLive ? 0 : 1;
     } catch (error) {
-        console.error(`Error parsing JSON: ${error.message}`);
+        console.error('An error occurred:', error);
         return 1;
     }
 }
@@ -59,7 +66,7 @@ async function processFiles(inputFiles) {
     const promises = inputFiles.map(async (inputFile) => {
         const fileContent = fs.readFileSync(inputFile, 'utf-8');
         const fileName = path.basename(inputFile);
-        const check = await checkCookies(fileContent);
+        const check = await importCookiesFromFileAndMakeRequest(targetUrl, fileContent);
 
         if (check === 1) {
             console.log(`❌ ${fileName}`);
