@@ -24,12 +24,13 @@ npm i selenium-webdriver
 ```
 
 ## Running the project
-##The config file run with JSON Cookies. If your file is NETSCAPE Cookies you must convert it to JSON.
+## The config file run with JSON Cookies. If your file is NETSCAPE Cookies you must convert it to JSON.
+Two option
 1. Use my project
 Run file `index.html` to convert NETSCAPE Cookies to JSON Cookies. This file can convert many file NETSCAPE to JSON.
 2. Use convert online [Here](https://leaksradar.com/converter)
 
-##Merge file (If you need to convert many many file NETSCAPE Cookies to JSON Cookies).
+## Merge file (If you need to convert many many file NETSCAPE Cookies to JSON Cookies).
 This script to merge all files Netscape to one file name `mergeFile.txt` when run. Copy all data from `mergeFile.txt` and paste it on local `index.html`.
 Finally, click Convert and scroll down you can see button "Download all JSON" and download it.
 
@@ -37,7 +38,7 @@ Finally, click Convert and scroll down you can see button "Download all JSON" an
 node merge.js
 ```
 ## Run config
-Open file or terminal to ./config and run `node [NAME FILE YOU WANT TO RUN]` and enjoy.
+Open folder or terminal to ./config and run `node [NAME FILE YOU WANT TO RUN]` and enjoy.
 
 ```bash
 node [NAME FILE YOU WANT TO RUN]
