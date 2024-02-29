@@ -12,7 +12,7 @@ Once installed, clone the repository and install its dependencies running:
 ```bash
 npm install
 ```
-Install package [Puppeteer](https://www.npmjs.com/package/puppeteer), [Axios](https://www.npmjs.com/package/axios), [tough-cookie](https://www.npmjs.com/package/tough-cookie). You can read document before install it.
+Install package [Puppeteer](https://www.npmjs.com/package/puppeteer) (Used in older versions) , [Axios](https://www.npmjs.com/package/axios), [tough-cookie](https://www.npmjs.com/package/tough-cookie). You can read document before install it.
 ```bash
 npm i puppeteer axios tough-cookie
 ```
