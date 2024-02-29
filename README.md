@@ -12,9 +12,9 @@ Once installed, clone the repository and install its dependencies running:
 ```bash
 npm install
 ```
-Install package [Puppeteer](https://www.npmjs.com/package/puppeteer). You can read document before install it.
+Install package [Puppeteer](https://www.npmjs.com/package/puppeteer), [Axios](https://www.npmjs.com/package/axios), [tough-cookie](https://www.npmjs.com/package/tough-cookie). You can read document before install it.
 ```bash
-npm i puppeteer
+npm i puppeteer axios tough-cookie
 ```
 
 You can install [Selenium Webdriver](https://www.npmjs.com/package/selenium-webdriver) if you use file `crackPINUserLock.js`.
